@@ -19,24 +19,7 @@ namespace NudgeMVC.Controllers {
             var data = db.Notes.OrderBy(a => a.label_id);
             var categories = db.Categories.Where(c => c.user_id == 1);
             var notes = db.Notes.ToList();
-            //var test = new TreeviewController(db).GetTree();
             return View();
         }
-
-        public CategoryController(NudgeContext _db) {
-            db = _db;
-        }
-
-        [Produces("application/json")]
-        [HttpGet("findall")]
-        public async Task<IActionResult> FindAll() {
-            try {
-                var notes = db.Notes.ToList();
-                return Ok(notes);
-            } catch (Exception ex) {
-                return BadRequest();
-            }
-        }
-
     }
 }
