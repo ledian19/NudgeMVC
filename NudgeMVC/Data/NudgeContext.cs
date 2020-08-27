@@ -1,10 +1,12 @@
-﻿using NudgeMVC.Models;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using NudgeMVC.Models;
 
 namespace NudgeMVC.Data {
     public class NudgeContext : DbContext {
-        public NudgeContext(DbContextOptions<NudgeContext> options) : base(options) {
-
+        
+        protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder) {
+            optionsBuilder.UseSqlite("Filename=Data/NudgeDB.db");
         }
 
         public DbSet<Category> Categories { get; set; }
