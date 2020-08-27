@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using NudgeMVC.Data;
 using NudgeMVC.Models;
 
 namespace NudgeMVC.Controllers {
     
-    public class TreeviewController : Microsoft.AspNetCore.Mvc.Controller {
+    public class TreeViewController : Microsoft.AspNetCore.Mvc.Controller {
         
-        [System.Web.Mvc.HttpPost]
-        public System.Web.Mvc.JsonResult GetTree() {
+        public string GetTree() {
             var categories = db.Categories.Where(c => c.user_id == 1);
             var myCategories = categories.ToList();
             var categoriesList = new List<JsTreeModel>();
@@ -29,7 +30,8 @@ namespace NudgeMVC.Controllers {
                     CallJsTree(myCategories[i], myCategories, root);
                 }
             }
-            var res = new System.Web.Mvc.JsonResult { Data = categoriesList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            var res = JsonConvert.SerializeObject(categoriesList);
+            //var res = new System.Web.Mvc.JsonResult { Data = categoriesList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return res;
         }
 
@@ -38,11 +40,11 @@ namespace NudgeMVC.Controllers {
         public IActionResult Index() {
             //var data = db.Notes.OrderBy(a => a.label_id);
             //var notes = db.Notes.ToList();
-
+            var res = GetTree();
             return View();
         }
 
-        public TreeviewController(NudgeContext _db) {
+        public TreeViewController(NudgeContext _db) {
             db = _db;
         }
 

@@ -15,11 +15,22 @@ namespace NudgeMVC.Controllers {
 
         private NudgeContext db;
 
-        public IActionResult Index() {
-            var data = db.Notes.OrderBy(a => a.label_id);
-            var categories = db.Categories.Where(c => c.user_id == 1);
-            var notes = db.Notes.ToList();
-            return View();
+        public IActionResult Index () {
+            var data = db.Notes.OrderBy (a => a.label_id);
+            var categories = db.Categories.Where (c => c.user_id == 1);
+            var notes = db.Notes.ToList ();
+            var res = new TreeViewController (db).GetTree ();
+            ViewBag.Json = res;
+            return View ();
         }
+
+        public CategoryController (NudgeContext _db) {
+            db = _db;
+        }
+
+        /*public System.Web.Mvc.JsonResult GetTree(){
+            TreeViewController tv = new TreeViewController(db);
+            return tv.GetTree();
+        }*/
     }
 }

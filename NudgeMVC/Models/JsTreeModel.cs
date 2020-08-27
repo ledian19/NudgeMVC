@@ -7,10 +7,10 @@ namespace NudgeMVC.Models {
     
     public class JsTreeModel {
         public decimal? id { get; set; }
-        public string text { get; set; }
-        public string icon { get; set; }
+        public string? text { get; set; }
+        public string? icon { get; set; }
         //public NodeState? state { get; set; }
-        public List<JsTreeModel> children { get; set; }
+        public List<JsTreeModel>? children { get; set; }
     }
 
     //public class NodeState {
