@@ -28,9 +28,9 @@ namespace NudgeMVC.Controllers {
             db = _db;
         }
 
-        /*public System.Web.Mvc.JsonResult GetTree(){
+        public string GetTree(){
             TreeViewController tv = new TreeViewController(db);
             return tv.GetTree();
-        }*/
+        }
     }
 }

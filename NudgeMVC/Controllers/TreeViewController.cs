@@ -12,7 +12,13 @@ using NudgeMVC.Models;
 namespace NudgeMVC.Controllers {
     
     public class TreeViewController : Microsoft.AspNetCore.Mvc.Controller {
-        
+
+        private NudgeContext db;
+
+        public TreeViewController(NudgeContext _db) {
+            db = _db;
+        }
+
         public string GetTree() {
             var categories = db.Categories.Where(c => c.user_id == 1);
             var myCategories = categories.ToList();
@@ -30,27 +36,15 @@ namespace NudgeMVC.Controllers {
                     CallJsTree(myCategories[i], myCategories, root);
                 }
             }
-            var res = JsonConvert.SerializeObject(categoriesList);
-            //var res = new System.Web.Mvc.JsonResult { Data = categoriesList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            return res;
-        }
+            var json = JsonConvert.SerializeObject(categoriesList);
 
-        private NudgeContext db;
-
-        public IActionResult Index() {
-            //var data = db.Notes.OrderBy(a => a.label_id);
-            //var notes = db.Notes.ToList();
-            var res = GetTree();
-            return View();
-        }
-
-        public TreeViewController(NudgeContext _db) {
-            db = _db;
+            var res = new System.Web.Mvc.JsonResult { Data = categoriesList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return json;
         }
 
         public void CallJsTree(Category node, List<Category> myCategories, JsTreeModel parent) {
             var parentToBe = AddNode(node, parent);
-            var children = GetChildren(node, myCategories);
+            var children = GetChildren(node.category_id, myCategories);
             for (var i = 0; i < children.Count; i++) {
                 CallJsTree(children[i], myCategories, parentToBe); //call children of current node
             }
@@ -68,10 +62,10 @@ namespace NudgeMVC.Controllers {
             return newChild;
         }
 
-        public List<Category> GetChildren(Category category, List<Category> myCategories) {
+        public List<Category> GetChildren(int id, List<Category> myCategories) {
             var children = new List<Category>();
             foreach (var cat in myCategories) {
-                if (cat.parent_category == category.category_id) {
+                if (cat.parent_category == id) {
                     children.Add(cat);
                 }
             }

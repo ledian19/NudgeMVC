@@ -3,18 +3,14 @@
     Layout = "_SidebarLayout";
 }
 
-@section categories{
-    <p></p>
-}
-
 @section script {
     <script>
 
         $(document).ready(function () {
-            
+
             $("#treeContainer").jstree({
                 core: {
-                    "data": JSON.parse(@ViewBag.Json),
+                    "data": @Html.Raw(ViewBag.Json),
                     "themes": {
                         "dots": false,
                         "icons": true
@@ -22,6 +18,11 @@
                 },
                 plugins: ["wholerow"]
             });
+            $("#treeContainer").on(
+                "select_node.jstree", function (evt, data) {
+                    getNotesByCatId(data.node.id);
+                }
+            );
 
             $('#txtAddModal').summernote({
                 height: 300,
@@ -76,20 +77,23 @@
                 $("#divNotes").hide();
                 $("#divNotes").html("");
                 $("#divNotes").delay(300).slideDown();
+
                 document.getElementById('divNotes').insertAdjacentHTML('beforeend', notesStringResponse);
+
+
                 $('#categoryTitle').html(categoryName);
-                $('#hfCategoryId').val(hfCategoryId);
             });
         }
         function bindNodes(catid, callback) {
             var request = JSON.stringify({
-                stringCatId: catid,
+                id: catid,
+                test: "test"
             });
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                url: "index.aspx/DisplayNotes",
+                url: "/Notes/DisplayNotes",
                 data: request,
                 success: function (res) {
                     var data = JSON.parse(res.d);
@@ -102,6 +106,10 @@
                 }
             });
         }
+
+
+
+
         function addNote() {
             var category = 1; //initialize category id = 1 and check if another category is selected --> (1=Uncategorized)
             if ($('#=hfCategoryId').val() != "") {
@@ -262,3 +270,4 @@
 
     </script>
 }
+
