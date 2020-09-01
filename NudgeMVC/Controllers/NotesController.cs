@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NudgeMVC.Data;
 
@@ -17,8 +18,8 @@ namespace NudgeMVC.Controllers {
         public NotesController(NudgeContext _db) {
             db = _db;
         }
-        [HttpPost]
-        public JsonResult DisplayNotes([FromBody] string id) {
+
+        public JsonResult DisplayNotes(string id) {
             var myCategories = db.Categories.Where(x => x.user_id == 1);
             int catId = Convert.ToInt32(id);
 
@@ -53,6 +54,27 @@ namespace NudgeMVC.Controllers {
             var getParentChildren = new TreeViewController(db).GetChildren(node.category_id, myCategories);
             foreach (var child in getParentChildren) {
                 GetChildrenByParentId(child, myCategories);
+            }
+        }
+
+        public string AddNote(string catId, string noteTitle, string noteContent, string noteColor) {
+            int intCategory = Convert.ToInt32(catId);
+
+            try {
+                using (var context = new NudgeContext()) {
+                    var dept = new Models.Note() {
+                        note_title = noteTitle,
+                        note_highlight = noteColor,
+                        category_id = intCategory,
+                        note_content = noteContent,
+                        user_id = 1
+                    };
+                    context.Entry(dept).State = EntityState.Added;
+                    context.SaveChanges();
+                }
+                return "Successfully added note";
+            } catch {
+                return "An error occured.";
             }
         }
     }

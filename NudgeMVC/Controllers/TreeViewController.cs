@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NudgeMVC.Data;
@@ -37,8 +36,6 @@ namespace NudgeMVC.Controllers {
                 }
             }
             var json = JsonConvert.SerializeObject(categoriesList);
-
-            var res = new System.Web.Mvc.JsonResult { Data = categoriesList, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             return json;
         }
 

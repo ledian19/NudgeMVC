@@ -86,14 +86,14 @@
         }
         function bindNodes(catid, callback) {
             var request = JSON.stringify({
-                id: catid,
-                test: "test"
+                id: catid
             });
+
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                url: "/Notes/DisplayNotes",
+                url: "Notes/DisplayNotes",
                 data: request,
                 success: function (res) {
                     var data = JSON.parse(res.d);
@@ -112,21 +112,18 @@
 
         function addNote() {
             var category = 1; //initialize category id = 1 and check if another category is selected --> (1=Uncategorized)
-            if ($('#=hfCategoryId').val() != "") {
-                category = $('#hfCategoryId').val();
-            }
             var bgcolor = $.fn.bcPicker.toHex($('.bcPicker-picker').css("background-color"));
             var request = JSON.stringify({
                 catId: category,
                 noteTitle: $('#txtNoteTitle').val(),
-                noteContent: someText = $('#txtAddModal').summernote('code'),
+                //noteContent: $('#txtAddModal').summernote('code'),
                 noteColor: bgcolor
             });
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                url: "index.aspx/AddNote",
+                url: "Notes/AddNote",
                 data: request,
                 success: function (res) {
                     alertify.alert("", res.d, function () {

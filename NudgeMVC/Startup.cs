@@ -20,11 +20,10 @@ namespace NudgeMVC {
         }
         public IConfiguration configuration { get; }
 
-        public Startup (Microsoft.AspNetCore.Hosting.IWebHostEnvironment env) {
+        public Startup () {
             using (var client = new NudgeContext ()) {
                 client.Database.EnsureCreated ();
             }
-
         }
 
         public void ConfigureServices (IServiceCollection services) {
